@@ -108,38 +108,35 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Stopping the game.\nThank you for playing!");
         } else if(game_on){
-            if(answer.equals(quiz)){
-                String replyToken = messageEvent.getReplyToken();
-                BotMessage(replyToken, "Congratulations! You won the game!");
-            } else{
-                if(msg.length() == 1){
-                    boolean exist = false;
-                    for(int i = 0; i < Neff; i++){
-                        if(msg.charAt(0) == quiz.charAt(i)){
-                            answer_arr[i] = msg.charAt(0);
-                            exist = true;
-                        }
+            if(msg.length() == 1){
+                boolean exist = false;
+                for(int i = 0; i < Neff; i++){
+                    if(msg.charAt(0) == quiz.charAt(i)){
+                        answer_arr[i] = msg.charAt(0);
+                        exist = true;
                     }
-                    if(exist){
-                        answer = fillAnswer(answer_arr);
-                        String replyToken = messageEvent.getReplyToken();
-                        BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
-                                lives + ".\nAnswer: " + answer);
-                    } else {
-                        lives--;
-                        String replyToken = messageEvent.getReplyToken();
-                        BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
-                                lives + ".\nAnswer: " + answer);
+                }
+                if(exist){
+                    answer = fillAnswer(answer_arr);
+                    String replyToken = messageEvent.getReplyToken();
+                    BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
+                            lives + ".\nAnswer: " + answer);
+                    if(checkWin(answer, quiz)) {
+                        replyToken = messageEvent.getReplyToken();
+                        BotMessage(replyToken, "Congratulations! You won the game!");
                     }
-                } else{
+                } else {
                     lives--;
                     String replyToken = messageEvent.getReplyToken();
-                    BotMessage(replyToken, "You can only type one character at a time.\nCategory: " + current_cat + ".\nLives: " +
+                    BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
                             lives + ".\nAnswer: " + answer);
                 }
+            } else{
+                lives--;
+                String replyToken = messageEvent.getReplyToken();
+                BotMessage(replyToken, "You can only type one character at a time.\nCategory: " + current_cat + ".\nLives: " +
+                        lives + ".\nAnswer: " + answer);
             }
-
-
         } else{
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Incorrect command");
@@ -223,5 +220,9 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
             answ += ans[i];
         }
         return answ;
+    }
+
+    private boolean checkWin(String ans, String qz){
+        return ans.equals(qz);
     }
 }
