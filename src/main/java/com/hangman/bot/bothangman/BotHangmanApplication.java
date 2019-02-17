@@ -88,6 +88,7 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
             BotMessage(replyToken, "Type /start to start the game.\nType /stop to stop the game.");
         } else if(msg.equals("/start") && !game_on){
             Arrays.fill(answer_arr, '*');
+            lives = 8;
             game_on = true;
             current_cat = "";
             quiz = "";
@@ -117,22 +118,32 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                     }
                 }
                 if(exist){
-                    answer = fillAnswer(answer_arr);
-                    String replyToken = messageEvent.getReplyToken();
-                    BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
-                            lives + ".\nAnswer: " + answer);
                     if(checkWin(answer, quiz)) {
-                        replyToken = messageEvent.getReplyToken();
-                        BotMessage(replyToken, "Congratulations! You won the game!");
+                        answer = fillAnswer(answer_arr);
+                        String replyToken = messageEvent.getReplyToken();
+                        BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
+                                lives + ".\nAnswer: " + answer + ".\nCongratulations! You won the game!");
+                        game_on = false;
+                    } else{
+                        answer = fillAnswer(answer_arr);
+                        String replyToken = messageEvent.getReplyToken();
+                        BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
+                                lives + ".\nAnswer: " + answer);
                     }
                 } else {
                     lives--;
-                    String replyToken = messageEvent.getReplyToken();
-                    BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
-                            lives + ".\nAnswer: " + answer);
+                    if(lives == 0){
+                        String replyToken = messageEvent.getReplyToken();
+                        BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
+                                lives + ".\nAnswer: " + answer + ".\n Sorry, you lost :(");
+                        game_on = false;
+                    } else{
+                        String replyToken = messageEvent.getReplyToken();
+                        BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
+                                lives + ".\nAnswer: " + answer);
+                    }
                 }
             } else{
-                lives--;
                 String replyToken = messageEvent.getReplyToken();
                 BotMessage(replyToken, "You can only type one character at a time.\nCategory: " + current_cat + ".\nLives: " +
                         lives + ".\nAnswer: " + answer);
@@ -141,57 +152,7 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Incorrect command");
         }
-        /*if(msg.equals("/help")){
-            String replyToken = messageEvent.getReplyToken();
-            BotMessage(replyToken, "Type /start to start the game.\nType /stop to stop the game.");
-        } else if(msg.equals("/start") && !game_on){
-            game_on = true;
-            String replyToken = messageEvent.getReplyToken();
-            BotMessage(replyToken, "Starting the game.\nPick between rock, paper, \nor scissor by typing it!");
-        } else if(msg.equals("/stop") && game_on) {
-            game_on = false;
-            String replyToken = messageEvent.getReplyToken();
-            BotMessage(replyToken, "Stopping the game.\nThank you for playing!");
-        } else if(game_on && (msg.equals("scissor") || msg.equals("paper") || msg.equals("rock"))){
-            String replyToken = messageEvent.getReplyToken();
-            String answer = Answer();
-            if(answer.equals("Paper") && msg.equals("scissor")){
-                BotMessage(replyToken, answer + ". You win!");
-            } else if(answer.equals("Paper") && msg.equals("rock")){
-                BotMessage(replyToken, answer + ". You lose!");
-            } else if(answer.equals("Paper") && msg.equals("paper")){
-                BotMessage(replyToken, answer + ". Draw!");
-            } else if(answer.equals("Scissor") && msg.equals("scissor")){
-                BotMessage(replyToken, answer + ". Draw!");
-            } else if(answer.equals("Scissor") && msg.equals("rock")){
-                BotMessage(replyToken, answer + ". You win!");
-            } else if(answer.equals("Scissor") && msg.equals("paper")){
-                BotMessage(replyToken, answer + ". You lose!");
-            } else if(answer.equals("Rock") && msg.equals("scissor")){
-                BotMessage(replyToken, answer + ". You lose!");
-            } else if(answer.equals("Rock") && msg.equals("rock")){
-                BotMessage(replyToken, answer + ". Draw!");
-            } else if(answer.equals("Rock") && msg.equals("paper")){
-                BotMessage(replyToken, answer + ". You win!");
-            }
-        } else{
-            String replyToken = messageEvent.getReplyToken();
-            BotMessage(replyToken, "Incorrect command");
-        }*/
     }
-
-    /*private String Answer(){
-        String answer = "";
-        int random = new Random().nextInt();
-        if(random % 3 == 0){
-            answer = "Paper";
-        } else if(random % 3 == 1){
-            answer = "Scissor";
-        } else{
-            answer = "Rock";
-        }
-        return answer;
-    }*/
 
     private void BotMessage(String replyToken, String reply){
         TextMessage replyText = new TextMessage(reply);
