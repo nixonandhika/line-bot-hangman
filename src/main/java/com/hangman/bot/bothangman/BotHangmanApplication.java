@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
@@ -21,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 public class BotHangmanApplication extends SpringBootServletInitializer {
     private static boolean game_on = false;
     private static int lives = 8;
-    private static String[] category = new String[]{"fruit", "countries"};
+    private static String[] category = new String[]{"fruits", "countries"};
     private static String[] fruits = new String[]{"apple", "apricots", "avocado", "banana",
                                     "blueberries", "breadfruit", "cantaloupe",
                                     "cherries", "clementine", "coconut",
@@ -85,6 +86,7 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Type /start to start the game.\nType /stop to stop the game.");
         } else if(msg.equals("/start") && !game_on){
+            Arrays.fill(answer, '*');
             game_on = true;
             current_cat = "";
             quiz = "";
@@ -94,18 +96,22 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
             } else if(current_cat.equals("countries")){
                 quiz = getQuiz(countries);
             }
+            Neff = quiz.length();
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Starting the game.\nQuiz category will be randomized.\n" +
                                          "Category: " + current_cat + ".\nLives: " + lives + ".\nAnswer: " +
-                                         quiz);
+                                         answer);
         } else if(msg.equals("/stop") && game_on) {
             game_on = false;
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Stopping the game.\nThank you for playing!");
-        } else{
+        } else if(game_on){
             lives--;
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Too bad, Wrong Answer.\nCategory: " + current_cat + ".\nLives: " + lives + ".");
+        } else{
+            String replyToken = messageEvent.getReplyToken();
+            BotMessage(replyToken, "Incorrect command");
         }
         /*if(msg.equals("/help")){
             String replyToken = messageEvent.getReplyToken();
