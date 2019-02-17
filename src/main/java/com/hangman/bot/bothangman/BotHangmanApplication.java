@@ -85,20 +85,19 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Type /start to start the game.\nType /stop to stop the game.");
         } else if(msg.equals("/start") && !game_on){
+            game_on = true;
             current_cat = "";
             quiz = "";
-            String replyToken = messageEvent.getReplyToken();
-            BotMessage(replyToken, "Starting the game.\nQuiz category will be randomized.");
             current_cat = getCategory(category);
             if(current_cat.equals("fruits")){
                 quiz = getQuiz(fruits);
             } else if(current_cat.equals("countries")){
                 quiz = getQuiz(countries);
             }
-            replyToken = messageEvent.getReplyToken();
-            BotMessage(replyToken, "Category: " + current_cat + ".\nLives: " + lives + ".");
-            replyToken = messageEvent.getReplyToken();
-            BotMessage(replyToken, "Answer: " + quiz);
+            String replyToken = messageEvent.getReplyToken();
+            BotMessage(replyToken, "Starting the game.\nQuiz category will be randomized.\n" +
+                                         "Category: " + current_cat + ".\nLives: " + lives + ".\nAnswer: " +
+                                         quiz);
         } else if(msg.equals("/stop") && game_on) {
             game_on = false;
             String replyToken = messageEvent.getReplyToken();
