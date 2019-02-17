@@ -19,6 +19,7 @@ import java.util.concurrent.ExecutionException;
 @SpringBootApplication
 @LineMessageHandler
 public class BotHangmanApplication extends SpringBootServletInitializer {
+    public static boolean game_on = false;
 
     @Autowired
     private LineMessagingClient lineMessagingClient;
@@ -35,30 +36,35 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
     @EventMapping
     public void handleTextEvent(MessageEvent<TextMessageContent> messageEvent){
         String msg = messageEvent.getMessage().getText().toLowerCase();
-        if(msg.equals("/start")){
+        if(msg.equals("/start") || game_on){
+            game_on = true;
             String replyToken = messageEvent.getReplyToken();
-            BotMessage(replyToken, "Starting the game!\nPick between rock, paper, or scissor!");
-        } else{
+            BotMessage(replyToken, "Starting the game.\nPick between rock, paper, \nor scissor by typing it!");
+        } else if(msg.equals("/stop")) {
+            game_on = false;
+            String replyToken = messageEvent.getReplyToken();
+            BotMessage(replyToken, "Stopping the game.\nThank you for playing!");
+        } else {
             String replyToken = messageEvent.getReplyToken();
             String answer = Answer();
             if(answer.equals("Paper") && msg.equals("scissor")){
-                BotMessage(replyToken, answer + "You win!");
+                BotMessage(replyToken, answer + ". You win!");
             } else if(answer.equals("Paper") && msg.equals("rock")){
-                BotMessage(replyToken, answer + "You lose!");
+                BotMessage(replyToken, answer + ". You lose!");
             } else if(answer.equals("Paper") && msg.equals("paper")){
-                BotMessage(replyToken, answer + "Draw!");
+                BotMessage(replyToken, answer + ". Draw!");
             } else if(answer.equals("Scissor") && msg.equals("scissor")){
-                BotMessage(replyToken, answer + "Draw!");
+                BotMessage(replyToken, answer + ". Draw!");
             } else if(answer.equals("Scissor") && msg.equals("rock")){
-                BotMessage(replyToken, answer + "You win!");
+                BotMessage(replyToken, answer + ". You win!");
             } else if(answer.equals("Scissor") && msg.equals("paper")){
-                BotMessage(replyToken, answer + "You lose!");
+                BotMessage(replyToken, answer + ". You lose!");
             } else if(answer.equals("Rock") && msg.equals("scissor")){
-                BotMessage(replyToken, answer + "You lose!");
+                BotMessage(replyToken, answer + ". You lose!");
             } else if(answer.equals("Rock") && msg.equals("rock")){
-                BotMessage(replyToken, answer + "Draw!");
+                BotMessage(replyToken, answer + ". Draw!");
             } else if(answer.equals("Rock") && msg.equals("paper")){
-                BotMessage(replyToken, answer + "You win!");
+                BotMessage(replyToken, answer + ". You win!");
             }
         }
     }
