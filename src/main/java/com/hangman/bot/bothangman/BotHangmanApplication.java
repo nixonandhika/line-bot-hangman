@@ -19,10 +19,10 @@ import java.util.concurrent.ExecutionException;
 @SpringBootApplication
 @LineMessageHandler
 public class BotHangmanApplication extends SpringBootServletInitializer {
-    public static boolean game_on = false;
-    public static int lives = 8;
-    public static String[] category = new String[]{"fruit", "countries"};
-    public static String[] fruit = new String[]{"apple", "apricots", "avocado", "banana",
+    private static boolean game_on = false;
+    private static int lives = 8;
+    private static String[] category = new String[]{"fruit", "countries"};
+    private static String[] fruits = new String[]{"apple", "apricots", "avocado", "banana",
                                     "blueberries", "breadfruit", "cantaloupe",
                                     "cherries", "clementine", "coconut",
                                     "cranberries", "durian", "elderberries",
@@ -33,7 +33,7 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                                     "persimmon", "pineapple", "plums", "pomegranate",
                                     "prunes", "raspberries", "sapodilla", "strawberries",
                                     "tangerine", "watermelon"};
-    public static String[] countries = new String[]{"afghanistan", "albania", "algeria", "andorra",
+    private static String[] countries = new String[]{"afghanistan", "albania", "algeria", "andorra",
                                        "angola", "argentina", "armenia", "australia",
                                        "austria", "azerbaijan", "bahamas", "bahrain",
                                        "bangladesh", "barbados", "belarus", "belgium",
@@ -52,7 +52,7 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                                        "mongolia", "morocco", "mozambique", "myanmar",
                                        "nepal", "netherlands", "new zealand", "nicaragua",
                                        "nigeria", "north korea", "norway", "oman", "pakistan",
-                                       "panama", "paraguay", "peru", "philipppines", "poland",
+                                       "panama", "paraguay", "peru", "philippines", "poland",
                                        "portugal", "qatar", "romania", "russia", "saudi arabia",
                                        "serbia", "sierra leone", "singapore", "slovakia",
                                        "somalia", "south africa", "south korea", "spain",
@@ -61,6 +61,10 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                                        "united arab emirates", "united kingdom",
                                        "united states of america", "uruguay", "venezuela",
                                        "vietnam", "yemen", "zimbabwe"};
+    public static int Neff = 0;
+    public static char[] answer = new char[50];
+    private static String current_cat = "";
+    private static String quiz = "";
 
     @Autowired
     private LineMessagingClient lineMessagingClient;
@@ -77,10 +81,32 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
     @EventMapping
     public void handleTextEvent(MessageEvent<TextMessageContent> messageEvent){
         String msg = messageEvent.getMessage().getText().toLowerCase();
-        if(msg.equals("/start")){
-            String cat = getCategory(category);
+        if(msg.equals("/help")){
             String replyToken = messageEvent.getReplyToken();
-            BotMessage(replyToken, cat);
+            BotMessage(replyToken, "Type /start to start the game.\nType /stop to stop the game.");
+        } else if(msg.equals("/start") && !game_on){
+            current_cat = "";
+            quiz = "";
+            String replyToken = messageEvent.getReplyToken();
+            BotMessage(replyToken, "Starting the game.\nQuiz category will be randomized.");
+            current_cat = getCategory(category);
+            if(current_cat.equals("fruits")){
+                quiz = getQuiz(fruits);
+            } else if(current_cat.equals("countries")){
+                quiz = getQuiz(countries);
+            }
+            replyToken = messageEvent.getReplyToken();
+            BotMessage(replyToken, "Category: " + current_cat + ".\nLives: " + lives + ".");
+            replyToken = messageEvent.getReplyToken();
+            BotMessage(replyToken, "Answer: " + quiz);
+        } else if(msg.equals("/stop") && game_on) {
+            game_on = false;
+            String replyToken = messageEvent.getReplyToken();
+            BotMessage(replyToken, "Stopping the game.\nThank you for playing!");
+        } else{
+            lives--;
+            String replyToken = messageEvent.getReplyToken();
+            BotMessage(replyToken, "Too bad, Wrong Answer.\nCategory: " + current_cat + ".\nLives: " + lives + ".");
         }
         /*if(msg.equals("/help")){
             String replyToken = messageEvent.getReplyToken();
@@ -148,5 +174,10 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
     private String getCategory(String[] category){
         int random = new Random().nextInt(category.length);
         return category[random];
+    }
+
+    private String getQuiz(String[] ans){
+        int random = new Random().nextInt(ans.length);
+        return ans[random];
     }
 }
