@@ -37,10 +37,44 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
         String msg = messageEvent.getMessage().getText().toLowerCase();
         if(msg.equals("/start")){
             String replyToken = messageEvent.getReplyToken();
-            BotMessage(replyToken, "Starting the game!");
-        } else if(msg.equals("/stop")){
-            System.out.println("Permainan berhenti.");
+            BotMessage(replyToken, "Starting the game!\nPick between rock, paper, or scissor!");
+        } else{
+            String replyToken = messageEvent.getReplyToken();
+            String answer = Answer();
+            BotMessage(replyToken, answer);
+            if(answer.equals("Paper") && msg.equals("scissor")){
+                BotMessage(replyToken, "You win!");
+            } else if(answer.equals("Paper") && msg.equals("rock")){
+                BotMessage(replyToken, "You lose!");
+            } else if(answer.equals("Paper") && msg.equals("paper")){
+                BotMessage(replyToken, "Draw!");
+            } else if(answer.equals("Scissor") && msg.equals("scissor")){
+                BotMessage(replyToken, "Draw!");
+            } else if(answer.equals("Scissor") && msg.equals("rock")){
+                BotMessage(replyToken, "You win!");
+            } else if(answer.equals("Scissor") && msg.equals("paper")){
+                BotMessage(replyToken, "You lose!");
+            } else if(answer.equals("Rock") && msg.equals("scissor")){
+                BotMessage(replyToken, "You lose!");
+            } else if(answer.equals("Rock") && msg.equals("rock")){
+                BotMessage(replyToken, "Draw!");
+            } else if(answer.equals("Rock") && msg.equals("paper")){
+                BotMessage(replyToken, "You win!");
+            }
         }
+    }
+
+    private String Answer(){
+        String answer = "";
+        int random = new Random().nextInt();
+        if(random % 3 == 0){
+            answer = "Paper";
+        } else if(random % 3 == 1){
+            answer = "Scissor";
+        } else{
+            answer = "Rock";
+        }
+        return answer;
     }
 
     private void BotMessage(String replyToken, String reply){
@@ -50,7 +84,7 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                     .replyMessage(new ReplyMessage(replyToken, jawabanDalamBentukTextMessage))
                     .get();
         } catch (InterruptedException | ExecutionException e) {
-            System.out.println("Ada error saat ingin membalas chat");
+            System.out.println("Error when replying user's chat");
         }
     }
 
