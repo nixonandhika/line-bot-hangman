@@ -128,10 +128,10 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
             quiz = "";
             current_cat = getCategory(category);
             switch(current_cat){
-                case "fruits": quiz = getQuiz(fruits);
-                case "countries": quiz = getQuiz(countries);
-                case "colors": quiz = getQuiz(colors);
-                case "animals": quiz = getQuiz(animals);
+                case "fruits": quiz = getQuiz(fruits); break;
+                case "countries": quiz = getQuiz(countries); break;
+                case "colors": quiz = getQuiz(colors); break;
+                case "animals": quiz = getQuiz(animals); break;
             }
             /*if(current_cat.equals("fruits")){
                 quiz = getQuiz(fruits);
@@ -162,15 +162,14 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                     }
                 }
                 if(exist){
+                    answer = fillAnswer(answer_arr);
                     boolean win = checkWin(answer, quiz);
                     if(win) {
-                        answer = fillAnswer(answer_arr);
                         String replyToken = messageEvent.getReplyToken();
                         BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
                                 lives + ".\nAnswer: " + answer + ".\nCongratulations! You won the game!");
                         game_on = false;
                     } else{
-                        answer = fillAnswer(answer_arr);
                         String replyToken = messageEvent.getReplyToken();
                         BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
                                 lives + ".\nAnswer: " + answer);
