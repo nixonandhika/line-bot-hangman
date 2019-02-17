@@ -34,29 +34,17 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
 
     @EventMapping
     public void handleTextEvent(MessageEvent<TextMessageContent> messageEvent){
-        String pesan = messageEvent.getMessage().getText().toLowerCase();
-        System.out.print("works");
-        String[] pesanSplit = pesan.split(" ");
-        if(pesanSplit[0].equals("apakah")){
-            String jawaban = getRandomJawaban();
+        String msg = messageEvent.getMessage().getText().toLowerCase();
+        if(msg.equals("/start")){
             String replyToken = messageEvent.getReplyToken();
-            balasChatDenganRandomJawaban(replyToken, jawaban);
+            BotMessage(replyToken, "Starting the game!");
+        } else if(msg.equals("/stop")){
+            System.out.println("Permainan berhenti.");
         }
     }
 
-    private String getRandomJawaban(){
-        String jawaban = "";
-        int random = new Random().nextInt();
-        if(random%2==0){
-            jawaban = "Ya";
-        } else{
-            jawaban = "Nggak";
-        }
-        return jawaban;
-    }
-
-    private void balasChatDenganRandomJawaban(String replyToken, String jawaban){
-        TextMessage jawabanDalamBentukTextMessage = new TextMessage(jawaban);
+    private void BotMessage(String replyToken, String reply){
+        TextMessage jawabanDalamBentukTextMessage = new TextMessage(reply);
         try {
             lineMessagingClient
                     .replyMessage(new ReplyMessage(replyToken, jawabanDalamBentukTextMessage))
