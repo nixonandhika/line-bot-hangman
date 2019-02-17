@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 public class BotHangmanApplication extends SpringBootServletInitializer {
     private static boolean game_on = false;
     private static int lives = 8;
-    private static String[] category = new String[]{"fruits", "countries"};
+    private static String[] category = new String[]{"fruits", "countries", "colors", "animals"};
     private static String[] fruits = new String[]{"apple", "apricots", "avocado", "banana",
                                     "blueberries", "breadfruit", "cantaloupe",
                                     "cherries", "clementine", "coconut",
@@ -62,6 +62,39 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                                        "united arab emirates", "united kingdom",
                                        "united states of america", "uruguay", "venezuela",
                                        "vietnam", "yemen", "zimbabwe"};
+    private static String[] colors = new String[]{"yellow", "peach", "sepia", "orange", "gold",
+                                                  "tangerine", "apricot", "bronze", "clay", "amber",
+                                                  "red", "scarlet", "maroon", "crimson", "pink",
+                                                  "ruby", "magenta", "lavender", "taffy", "violet",
+                                                  "orchid", "plum", "blue", "sky", "navy", "sapphire",
+                                                  "azure", "denim", "green", "olive", "jade", "moss",
+                                                  "mint", "emerald", "brown", "cedar", "cinnamon",
+                                                  "brunette", "mocha", "chocolate", "caramel", "walnut",
+                                                  "pecan", "hickory", "tawny", "gray", "ash"};
+    private static String[] animals = new String[]{"otter", "elephant", "fish", "lion", "lynx", "porcupine",
+                                                   "bull", "dog", "cat", "snake", "albatross", "alpaca",
+                                                   "parrot", "possum", "alligator", "beaver", "badger", "bison",
+                                                   "sheep", "buffalo", "crow", "goose", "ant", "anteater",
+                                                   "squirrel", "rat", "fox", "hare", "rabbit", "armadillo",
+                                                   "bat", "tortoise", "turtle", "turkey", "magpie", "pelican",
+                                                   "baboon", "eagle", "bird", "whale", "mongoose", "deer",
+                                                   "gecko", "bear", "rhino", "swan", "spider", "monkey",
+                                                   "crane", "flamingo", "kangaroo", "ferret", "oyster", "duck",
+                                                   "peacock", "shark", "bobcat", "boar", "butterfly", "capybara",
+                                                   "cheetah", "catfish", "chameleon", "chimpanzee", "chipmunnk",
+                                                   "cobra", "iguana", "seal", "wolf", "zebra", "crab", "coyote",
+                                                   "crocodile", "cow", "dolphin", "dove", "woodpecker", "emu",
+                                                   "falcon", "pigeon", "frog", "gazelle", "giraffe", "goat",
+                                                   "glider", "goose", "gull", "hawk", "hedgehog", "hen", "cock",
+                                                   "chicken", "hippo", "hornbill", "herring", "hyena",
+                                                   "hummingbird", "impala", "jaguar", "kingfisher", "koala",
+                                                   "lark", "lemur", "leopard", "lizard", "meerkat", "marmot",
+                                                   "moose", "ocelot", "orca", "ostrich", "owl", "ox",
+                                                   "penguin", "platypus", "puma", "python", "quail",
+                                                   "raccoon", "raven", "dragonfly", "antelope", "salmon",
+                                                   "skunk", "sloth", "starfish", "tarantula", "tiger",
+                                                   "vulture", "wallaby", "weaver"};
+
     private static int Neff = 0;
     private static char[] answer_arr = new char[50];
     private static String current_cat = "";
@@ -85,7 +118,8 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
         String msg = messageEvent.getMessage().getText().toLowerCase();
         if(msg.equals("/help")){
             String replyToken = messageEvent.getReplyToken();
-            BotMessage(replyToken, "Type /start to start the game.\nType /stop to stop the game.");
+            BotMessage(replyToken, "Type /start to start the game.\nType /stop to stop the game.\n" +
+                                         "When playing, you can only type one character at a time.");
         } else if(msg.equals("/start") && !game_on){
             Arrays.fill(answer_arr, '*');
             lives = 8;
@@ -93,11 +127,21 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
             current_cat = "";
             quiz = "";
             current_cat = getCategory(category);
-            if(current_cat.equals("fruits")){
+            switch(current_cat){
+                case "fruits": quiz = getQuiz(fruits);
+                case "countries": quiz = getQuiz(countries);
+                case "colors": quiz = getQuiz(colors);
+                case "animals": quiz = getQuiz(animals);
+            }
+            /*if(current_cat.equals("fruits")){
                 quiz = getQuiz(fruits);
             } else if(current_cat.equals("countries")){
                 quiz = getQuiz(countries);
-            }
+            } else if(current_cat.equals("colors")){
+                quiz = getQuiz(colors);
+            } else if(current_cat.equals("animals")){
+                quiz = getQuiz(animals);
+            }*/
             Neff = quiz.length();
             answer = fillAnswer(answer_arr);
             String replyToken = messageEvent.getReplyToken();
@@ -118,7 +162,8 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                     }
                 }
                 if(exist){
-                    if(checkWin(answer, quiz)) {
+                    boolean win = checkWin(answer, quiz);
+                    if(win) {
                         answer = fillAnswer(answer_arr);
                         String replyToken = messageEvent.getReplyToken();
                         BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
@@ -135,7 +180,7 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                     if(lives == 0){
                         String replyToken = messageEvent.getReplyToken();
                         BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
-                                lives + ".\nAnswer: " + answer + ".\n Sorry, you lost :(");
+                                lives + ".\nAnswer: " + answer + ".\n Sorry, you lost :(\nThe answer is " + quiz);
                         game_on = false;
                     } else{
                         String replyToken = messageEvent.getReplyToken();
