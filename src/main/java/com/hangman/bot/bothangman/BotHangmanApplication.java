@@ -35,6 +35,7 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
     @EventMapping
     public void handleTextEvent(MessageEvent<TextMessageContent> messageEvent){
         String pesan = messageEvent.getMessage().getText().toLowerCase();
+        System.out.print("works");
         String[] pesanSplit = pesan.split(" ");
         if(pesanSplit[0].equals("apakah")){
             String jawaban = getRandomJawaban();
