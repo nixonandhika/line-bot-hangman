@@ -43,22 +43,31 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
             String answer = Answer();
             BotMessage(replyToken, answer);
             if(answer.equals("Paper") && msg.equals("scissor")){
+                replyToken = messageEvent.getReplyToken();
                 BotMessage(replyToken, "You win!");
             } else if(answer.equals("Paper") && msg.equals("rock")){
+                replyToken = messageEvent.getReplyToken();
                 BotMessage(replyToken, "You lose!");
             } else if(answer.equals("Paper") && msg.equals("paper")){
+                replyToken = messageEvent.getReplyToken();
                 BotMessage(replyToken, "Draw!");
             } else if(answer.equals("Scissor") && msg.equals("scissor")){
+                replyToken = messageEvent.getReplyToken();
                 BotMessage(replyToken, "Draw!");
             } else if(answer.equals("Scissor") && msg.equals("rock")){
+                replyToken = messageEvent.getReplyToken();
                 BotMessage(replyToken, "You win!");
             } else if(answer.equals("Scissor") && msg.equals("paper")){
+                replyToken = messageEvent.getReplyToken();
                 BotMessage(replyToken, "You lose!");
             } else if(answer.equals("Rock") && msg.equals("scissor")){
+                replyToken = messageEvent.getReplyToken();
                 BotMessage(replyToken, "You lose!");
             } else if(answer.equals("Rock") && msg.equals("rock")){
+                replyToken = messageEvent.getReplyToken();
                 BotMessage(replyToken, "Draw!");
             } else if(answer.equals("Rock") && msg.equals("paper")){
+                replyToken = messageEvent.getReplyToken();
                 BotMessage(replyToken, "You win!");
             }
         }
