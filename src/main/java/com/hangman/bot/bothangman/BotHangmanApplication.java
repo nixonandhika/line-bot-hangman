@@ -59,8 +59,7 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                                        "somalia", "south africa", "south korea", "spain",
                                        "sri lanka", "sudan", "sweden", "switzerland", "syria",
                                        "thailand", "tunisia", "turkey", "uganda", "ukraine",
-                                       "united arab emirates", "united kingdom",
-                                       "united states of america", "uruguay", "venezuela",
+                                       "america", "uruguay", "venezuela",
                                        "vietnam", "yemen", "zimbabwe"};
     private static String[] colors = new String[]{"yellow", "peach", "sepia", "orange", "gold",
                                                   "tangerine", "apricot", "bronze", "clay", "amber",
@@ -133,15 +132,6 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                 case "colors": quiz = getQuiz(colors); break;
                 case "animals": quiz = getQuiz(animals); break;
             }
-            /*if(current_cat.equals("fruits")){
-                quiz = getQuiz(fruits);
-            } else if(current_cat.equals("countries")){
-                quiz = getQuiz(countries);
-            } else if(current_cat.equals("colors")){
-                quiz = getQuiz(colors);
-            } else if(current_cat.equals("animals")){
-                quiz = getQuiz(animals);
-            }*/
             Neff = quiz.length();
             answer = fillAnswer(answer_arr);
             String replyToken = messageEvent.getReplyToken();
@@ -155,37 +145,43 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
         } else if(game_on){
             if(msg.length() == 1){
                 boolean exist = false;
-                for(int i = 0; i < Neff; i++){
-                    if(msg.charAt(0) == quiz.charAt(i)){
-                        answer_arr[i] = msg.charAt(0);
-                        exist = true;
+                int contains = answer.indexOf(msg.charAt(0));
+                if(contains == -1){
+                    for(int i = 0; i < Neff; i++){
+                        if(msg.charAt(0) == quiz.charAt(i)){
+                            answer_arr[i] = msg.charAt(0);
+                            exist = true;
+                        }
                     }
-                }
-                if(exist){
-                    answer = fillAnswer(answer_arr);
-                    boolean win = checkWin(answer, quiz);
-                    if(win) {
-                        String replyToken = messageEvent.getReplyToken();
-                        BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
-                                lives + ".\nAnswer: " + answer + ".\nCongratulations! You won the game!");
-                        game_on = false;
-                    } else{
-                        String replyToken = messageEvent.getReplyToken();
-                        BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
-                                lives + ".\nAnswer: " + answer);
+                    if(exist){
+                        answer = fillAnswer(answer_arr);
+                        boolean win = checkWin(answer, quiz);
+                        if(win) {
+                            String replyToken = messageEvent.getReplyToken();
+                            BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
+                                    lives + ".\nAnswer: " + answer + ".\nCongratulations! You won the game!");
+                            game_on = false;
+                        } else{
+                            String replyToken = messageEvent.getReplyToken();
+                            BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
+                                    lives + ".\nAnswer: " + answer);
+                        }
+                    } else {
+                        lives--;
+                        if(lives == 0){
+                            String replyToken = messageEvent.getReplyToken();
+                            BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
+                                    lives + ".\nAnswer: " + answer + ".\n\nSorry, you lost :(\nThe answer is " + quiz);
+                            game_on = false;
+                        } else{
+                            String replyToken = messageEvent.getReplyToken();
+                            BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
+                                    lives + ".\nAnswer: " + answer);
+                        }
                     }
-                } else {
-                    lives--;
-                    if(lives == 0){
-                        String replyToken = messageEvent.getReplyToken();
-                        BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
-                                lives + ".\nAnswer: " + answer + ".\n Sorry, you lost :(\nThe answer is " + quiz);
-                        game_on = false;
-                    } else{
-                        String replyToken = messageEvent.getReplyToken();
-                        BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
-                                lives + ".\nAnswer: " + answer);
-                    }
+                } else{
+                    String replyToken = messageEvent.getReplyToken();
+                    BotMessage(replyToken, "You have already used that character.");
                 }
             } else{
                 String replyToken = messageEvent.getReplyToken();
