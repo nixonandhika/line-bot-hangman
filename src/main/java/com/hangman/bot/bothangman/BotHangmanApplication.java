@@ -41,34 +41,24 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
         } else{
             String replyToken = messageEvent.getReplyToken();
             String answer = Answer();
-            BotMessage(replyToken, answer);
             if(answer.equals("Paper") && msg.equals("scissor")){
-                replyToken = messageEvent.getReplyToken();
-                BotMessage(replyToken, "You win!");
+                BotMessage(replyToken, answer + "You win!");
             } else if(answer.equals("Paper") && msg.equals("rock")){
-                replyToken = messageEvent.getReplyToken();
-                BotMessage(replyToken, "You lose!");
+                BotMessage(replyToken, answer + "You lose!");
             } else if(answer.equals("Paper") && msg.equals("paper")){
-                replyToken = messageEvent.getReplyToken();
-                BotMessage(replyToken, "Draw!");
+                BotMessage(replyToken, answer + "Draw!");
             } else if(answer.equals("Scissor") && msg.equals("scissor")){
-                replyToken = messageEvent.getReplyToken();
-                BotMessage(replyToken, "Draw!");
+                BotMessage(replyToken, answer + "Draw!");
             } else if(answer.equals("Scissor") && msg.equals("rock")){
-                replyToken = messageEvent.getReplyToken();
-                BotMessage(replyToken, "You win!");
+                BotMessage(replyToken, answer + "You win!");
             } else if(answer.equals("Scissor") && msg.equals("paper")){
-                replyToken = messageEvent.getReplyToken();
-                BotMessage(replyToken, "You lose!");
+                BotMessage(replyToken, answer + "You lose!");
             } else if(answer.equals("Rock") && msg.equals("scissor")){
-                replyToken = messageEvent.getReplyToken();
-                BotMessage(replyToken, "You lose!");
+                BotMessage(replyToken, answer + "You lose!");
             } else if(answer.equals("Rock") && msg.equals("rock")){
-                replyToken = messageEvent.getReplyToken();
-                BotMessage(replyToken, "Draw!");
+                BotMessage(replyToken, answer + "Draw!");
             } else if(answer.equals("Rock") && msg.equals("paper")){
-                replyToken = messageEvent.getReplyToken();
-                BotMessage(replyToken, "You win!");
+                BotMessage(replyToken, answer + "You win!");
             }
         }
     }
