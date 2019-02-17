@@ -36,15 +36,18 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
     @EventMapping
     public void handleTextEvent(MessageEvent<TextMessageContent> messageEvent){
         String msg = messageEvent.getMessage().getText().toLowerCase();
-        if(msg.equals("/start") || game_on){
+        if(msg.equals("/help")){
+            String replyToken = messageEvent.getReplyToken();
+            BotMessage(replyToken, "Type /start to start the game.\nType /stop to stop the game.");
+        } else if(msg.equals("/start") && !game_on){
             game_on = true;
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Starting the game.\nPick between rock, paper, \nor scissor by typing it!");
-        } else if(msg.equals("/stop")) {
+        } else if(msg.equals("/stop") && game_on) {
             game_on = false;
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Stopping the game.\nThank you for playing!");
-        } else {
+        } else if(game_on && (msg.equals("scissor") || msg.equals("paper") || msg.equals("rock"))){
             String replyToken = messageEvent.getReplyToken();
             String answer = Answer();
             if(answer.equals("Paper") && msg.equals("scissor")){
@@ -66,6 +69,9 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
             } else if(answer.equals("Rock") && msg.equals("paper")){
                 BotMessage(replyToken, answer + ". You win!");
             }
+        } else{
+            String replyToken = messageEvent.getReplyToken();
+            BotMessage(replyToken, "Incorrect commnad");
         }
     }
 
