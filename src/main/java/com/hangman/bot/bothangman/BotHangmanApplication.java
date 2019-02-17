@@ -62,10 +62,11 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                                        "united arab emirates", "united kingdom",
                                        "united states of america", "uruguay", "venezuela",
                                        "vietnam", "yemen", "zimbabwe"};
-    public static int Neff = 0;
-    public static char[] answer = new char[50];
+    private static int Neff = 0;
+    private static char[] answer_arr = new char[50];
     private static String current_cat = "";
     private static String quiz = "";
+    private static String answer = "";
 
     @Autowired
     private LineMessagingClient lineMessagingClient;
@@ -86,7 +87,7 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Type /start to start the game.\nType /stop to stop the game.");
         } else if(msg.equals("/start") && !game_on){
-            Arrays.fill(answer, '*');
+            Arrays.fill(answer_arr, '*');
             game_on = true;
             current_cat = "";
             quiz = "";
@@ -97,6 +98,9 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                 quiz = getQuiz(countries);
             }
             Neff = quiz.length();
+            for(int i = 0; i < Neff; i++){
+                answer += answer_arr[i];
+            }
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Starting the game.\nQuiz category will be randomized.\n" +
                                          "Category: " + current_cat + ".\nLives: " + lives + ".\nAnswer: " +
