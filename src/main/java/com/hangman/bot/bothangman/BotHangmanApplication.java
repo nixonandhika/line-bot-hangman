@@ -147,9 +147,8 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                             String replyToken = messageEvent.getReplyToken();
                             BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
                                     lives + ".\nAnswer: " + answer + ".\nCongratulations! You won the game!" +
-                                    "\n\nType anything to keep playing. Type /stop to stop playing.");
+                                    "\n\nType /start to keep playing. Type /stop to stop playing.");
                             game_on = false;
-                            initializeGame();
                         } else{
                             String replyToken = messageEvent.getReplyToken();
                             BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
@@ -161,7 +160,7 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                             String replyToken = messageEvent.getReplyToken();
                             BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
                                     lives + ".\nAnswer: " + answer + ".\n\nSorry, you lost :(\nThe answer is " + quiz +
-                                    "\n\n Type anything to keep playing. Type /stop to stop playing");
+                                    "\n\nType /start to keep playing. Type /stop to stop playing");
                             game_on = false;
                             initializeGame();
                         } else{
