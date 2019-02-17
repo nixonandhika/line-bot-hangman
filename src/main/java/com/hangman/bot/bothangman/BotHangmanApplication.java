@@ -134,15 +134,15 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                 boolean exist = false;
                 int contains = answer.indexOf(msg.charAt(0));
                 if(contains == -1){
-                    for(int i = 0; i < Neff; i++){
+                    for(int i = 0; i < Neff; i++){ /*search character in quiz answer*/
                         if(msg.charAt(0) == quiz.charAt(i)){
                             answer_arr[i] = msg.charAt(0);
                             exist = true;
                         }
                     }
-                    if(exist){
-                        answer = fillAnswer(answer_arr);
-                        boolean win = checkWin(answer, quiz);
+                    if(exist){ /*If character exist in quiz answer*/
+                        answer = fillAnswer(answer_arr); /*update answer string*/
+                        boolean win = checkWin(answer, quiz); /*check win condition*/
                         if(win) {
                             String replyToken = messageEvent.getReplyToken();
                             BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
@@ -154,26 +154,25 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                             BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
                                     lives + ".\nAnswer: " + answer);
                         }
-                    } else {
-                        lives--;
+                    } else { /*If character isn't in quiz answer*/
+                        lives--; /*decrement live*/
                         if(lives == 0){
                             String replyToken = messageEvent.getReplyToken();
                             BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
                                     lives + ".\nAnswer: " + answer + ".\n\nSorry, you lost :(\nThe answer is " + quiz +
                                     "\n\nType /start to play again.");
                             game_on = false;
-                            initializeGame();
                         } else{
                             String replyToken = messageEvent.getReplyToken();
                             BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
                                     lives + ".\nAnswer: " + answer);
                         }
                     }
-                } else{
+                } else{ /*If character already in string answer*/
                     String replyToken = messageEvent.getReplyToken();
                     BotMessage(replyToken, "You have already used that character.");
                 }
-            } else{
+            } else{ /*If user type in more than one character*/
                 String replyToken = messageEvent.getReplyToken();
                 BotMessage(replyToken, "You can only type one character at a time.\nCategory: " + current_cat + ".\nLives: " +
                         lives + ".\nAnswer: " + answer);
