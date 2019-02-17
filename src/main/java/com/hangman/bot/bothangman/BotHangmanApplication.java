@@ -60,7 +60,7 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                                        "thailand", "tunisia", "turkey", "uganda", "ukraine",
                                        "united arab emirates", "united kingdom",
                                        "united states of america", "uruguay", "venezuela",
-                                       "vietnam", "yemen", "zimbabwe"}
+                                       "vietnam", "yemen", "zimbabwe"};
 
     @Autowired
     private LineMessagingClient lineMessagingClient;
