@@ -120,20 +120,7 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
             BotMessage(replyToken, "Type /start to start the game.\nType /stop to stop the game.\n" +
                                          "When playing, you can only type one character at a time.");
         } else if(msg.equals("/start") && !game_on){
-            Arrays.fill(answer_arr, '*');
-            lives = 8;
-            game_on = true;
-            current_cat = "";
-            quiz = "";
-            current_cat = getCategory(category);
-            switch(current_cat){
-                case "fruits": quiz = getQuiz(fruits); break;
-                case "countries": quiz = getQuiz(countries); break;
-                case "colors": quiz = getQuiz(colors); break;
-                case "animals": quiz = getQuiz(animals); break;
-            }
-            Neff = quiz.length();
-            answer = fillAnswer(answer_arr);
+            initializeGame();
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Starting the game.\nQuiz category will be randomized.\n" +
                                          "Category: " + current_cat + ".\nLives: " + lives + ".\nAnswer: " +
@@ -159,8 +146,10 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                         if(win) {
                             String replyToken = messageEvent.getReplyToken();
                             BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
-                                    lives + ".\nAnswer: " + answer + ".\nCongratulations! You won the game!");
+                                    lives + ".\nAnswer: " + answer + ".\nCongratulations! You won the game!" +
+                                    "\n\nType anything to keep playing. Type /stop to stop playing.");
                             game_on = false;
+                            initializeGame();
                         } else{
                             String replyToken = messageEvent.getReplyToken();
                             BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
@@ -171,8 +160,10 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                         if(lives == 0){
                             String replyToken = messageEvent.getReplyToken();
                             BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
-                                    lives + ".\nAnswer: " + answer + ".\n\nSorry, you lost :(\nThe answer is " + quiz);
+                                    lives + ".\nAnswer: " + answer + ".\n\nSorry, you lost :(\nThe answer is " + quiz +
+                                    "\n\n Type anything to keep playing. Type /stop to stop playing");
                             game_on = false;
+                            initializeGame();
                         } else{
                             String replyToken = messageEvent.getReplyToken();
                             BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
@@ -225,5 +216,22 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
 
     private boolean checkWin(String ans, String qz){
         return ans.equals(qz);
+    }
+
+    private void initializeGame(){
+        Arrays.fill(answer_arr, '*');
+        lives = 8;
+        game_on = true;
+        current_cat = "";
+        quiz = "";
+        current_cat = getCategory(category);
+        switch(current_cat){
+            case "fruits": quiz = getQuiz(fruits); break;
+            case "countries": quiz = getQuiz(countries); break;
+            case "colors": quiz = getQuiz(colors); break;
+            case "animals": quiz = getQuiz(animals); break;
+        }
+        Neff = quiz.length();
+        answer = fillAnswer(answer_arr);
     }
 }
