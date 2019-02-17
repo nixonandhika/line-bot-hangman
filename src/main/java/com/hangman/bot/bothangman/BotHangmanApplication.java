@@ -98,9 +98,7 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                 quiz = getQuiz(countries);
             }
             Neff = quiz.length();
-            for(int i = 0; i < Neff; i++){
-                answer += answer_arr[i];
-            }
+            answer = fillAnswer(answer_arr);
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Starting the game.\nQuiz category will be randomized.\n" +
                                          "Category: " + current_cat + ".\nLives: " + lives + ".\nAnswer: " +
@@ -110,9 +108,38 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Stopping the game.\nThank you for playing!");
         } else if(game_on){
-            lives--;
-            String replyToken = messageEvent.getReplyToken();
-            BotMessage(replyToken, "Too bad, Wrong Answer.\nCategory: " + current_cat + ".\nLives: " + lives + ".");
+            if(answer.equals(quiz)){
+                String replyToken = messageEvent.getReplyToken();
+                BotMessage(replyToken, "Congratulations! You won the game!");
+            } else{
+                if(msg.length() == 1){
+                    boolean exist = false;
+                    for(int i = 0; i < Neff; i++){
+                        if(msg.charAt(0) == quiz.charAt(i)){
+                            answer_arr[i] = msg.charAt(0);
+                            exist = true;
+                        }
+                    }
+                    if(exist){
+                        answer = fillAnswer(answer_arr);
+                        String replyToken = messageEvent.getReplyToken();
+                        BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
+                                lives + ".\nAnswer: " + answer);
+                    } else {
+                        lives--;
+                        String replyToken = messageEvent.getReplyToken();
+                        BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
+                                lives + ".\nAnswer: " + answer);
+                    }
+                } else{
+                    lives--;
+                    String replyToken = messageEvent.getReplyToken();
+                    BotMessage(replyToken, "You can only type one character at a time.\nCategory: " + current_cat + ".\nLives: " +
+                            lives + ".\nAnswer: " + answer);
+                }
+            }
+
+
         } else{
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Incorrect command");
@@ -188,5 +215,13 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
     private String getQuiz(String[] ans){
         int random = new Random().nextInt(ans.length);
         return ans[random];
+    }
+
+    private String fillAnswer(char[] ans){
+        String answ = "";
+        for(int i = 0; i < Neff; i++){
+            answ += ans[i];
+        }
+        return answ;
     }
 }
