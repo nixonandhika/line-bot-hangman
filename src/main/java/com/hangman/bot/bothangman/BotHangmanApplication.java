@@ -151,10 +151,12 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                             BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
                                     lives + ".\nAnswer: " + answer + ".\nCongratulations! You won the game!" +
                                     "\n\nType /start to play again.");
-                            String eplyToken = messageEvent.getReplyToken();
-                            BotMessage(eplyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
-                                    lives + ".\nAnswer: " + answer + ".\nCongratulations! You won the game!" +
-                                    "\n\nType /start to play again.");
+                            if(1==1){
+                                replyToken = messageEvent.getReplyToken();
+                                BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
+                                        lives + ".\nAnswer: " + answer + ".\nCongratulations! You won the game!" +
+                                        "\n\nType /start to play again.");
+                            }
                             game_on = false;
                         } else{
                             String replyToken = messageEvent.getReplyToken();
