@@ -99,6 +99,7 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
     private static String current_cat = "";
     private static String quiz = "";
     private static String answer = "";
+    private static int score = 0;
 
     @Autowired
     private LineMessagingClient lineMessagingClient;
@@ -120,11 +121,12 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
             BotMessage(replyToken, "Type /start to start the game.\nType /stop to stop the game.\n" +
                                          "When playing, you can only type one character at a time.");
         } else if(msg.equals("/start") && !game_on){
+            score = 0;
             initializeGame();
             String replyToken = messageEvent.getReplyToken();
             BotMessage(replyToken, "Starting the game.\nQuiz category will be randomized.\n" +
                                          "Category: " + current_cat + ".\nLives: " + lives + ".\nAnswer: " +
-                                         answer);
+                                         answer + "\n\nScore: " + score + ".");
         } else if(msg.equals("/stop") && game_on) {
             game_on = false;
             String replyToken = messageEvent.getReplyToken();
@@ -143,16 +145,21 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                     if(exist){ /*If character exist in quiz answer*/
                         answer = fillAnswer(answer_arr); /*update answer string*/
                         boolean win = checkWin(answer, quiz); /*check win condition*/
+                        score++;
                         if(win) {
                             String replyToken = messageEvent.getReplyToken();
                             BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
+                                    lives + ".\nAnswer: " + answer + ".\nCongratulations! You won the game!" +
+                                    "\n\nType /start to play again.");
+                            String eplyToken = messageEvent.getReplyToken();
+                            BotMessage(eplyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
                                     lives + ".\nAnswer: " + answer + ".\nCongratulations! You won the game!" +
                                     "\n\nType /start to play again.");
                             game_on = false;
                         } else{
                             String replyToken = messageEvent.getReplyToken();
                             BotMessage(replyToken, "Correct!\nCategory: " + current_cat + ".\nLives: " +
-                                    lives + ".\nAnswer: " + answer);
+                                    lives + ".\nAnswer: " + answer  + "\n\nScore: " + score + ".");
                         }
                     } else { /*If character isn't in quiz answer*/
                         lives--; /*decrement live*/
@@ -160,12 +167,12 @@ public class BotHangmanApplication extends SpringBootServletInitializer {
                             String replyToken = messageEvent.getReplyToken();
                             BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
                                     lives + ".\nAnswer: " + answer + ".\n\nSorry, you lost :(\nThe answer is " + quiz +
-                                    "\n\nType /start to play again.");
+                                    "\n\nScore: " + score + ".\n\nType /start to play again.");
                             game_on = false;
                         } else{
                             String replyToken = messageEvent.getReplyToken();
                             BotMessage(replyToken, "Too bad, wrong answer.\nCategory: " + current_cat + ".\nLives: " +
-                                    lives + ".\nAnswer: " + answer);
+                                    lives + ".\nAnswer: " + answer  + "\n\nScore: " + score + ".");
                         }
                     }
                 } else{ /*If character already in string answer*/
